@@ -1,65 +1,65 @@
-const { containsArray, containsWord, containsField, executeCallbackOnArray, 
-    executeCallbackOnPhrase,createPerson } = require('./additional_functions');
+const {
+    arrayContainsObject,
+    textContainsWord,
+    objectReturnedByFunctionHasField,
+    applyCallbackToArray,
+    phraseToArrayAndApplyCallback,
+    person
+} = require('./functions');
 
-
-//Чи містить масив вказаний об’єкт  
-test('containsArray should return true if array contains the object', () => {
-    expect(containsArray([8, 6, 3], 9)).toBe(true);
-});
-  
-test('containsArray should return false if array does not contain the object', () => {
-    expect(containsArray([8, 6, 3], 24)).toBe(false);
-});
-  
-
-
-//Чи містить об’єкт який повертає функція вказане поле
-test('containsWord should return true if string contains the word', () => {
-    expect(containsWord('My name is Maria', 'Maria')).toBe(true);
-});
-  
-test('containsWord should return false if string does not contain the word', () => {
-    expect(containsWord('My name is Maria', 'Andrey')).toBe(false);
-});
-  
-
-
-/*Функцію яка приймає масив та зворотній виклик який виконується над елементами масиву.
-Напишіть тест який перевіряє кількість запусків зворотного виклику.*/
-test('containsField should return true if object contains the field', () => {
-    expect(containsField({ name: 'Maria', age: 21 }, 'name')).toBe(true);
+test('arrayContainsObject should return true if array contains the specified object', () => {
+    const array = [{ id: 1, name: 'Mariia' }, { id: 2, name: 'Andrey' }];
+    const object = { id: 1, name: 'Mariia' };
+    expect(arrayContainsObject(array, object)).toBe(true);
 });
 
-test('containsField should return false if object does not contain the field', () => {
-    expect(containsField({ name: 'Maria', age: 21 }, 'gender')).toBe(false);
+test('arrayContainsObject should return false if array does not contain the specified object', () => {
+    const array = [{ id: 1, name: 'Mariia' }, { id: 2, name: 'Andrey' }];
+    const object = { id: 3, name: 'Natali' };
+    expect(arrayContainsObject(array, object)).toBe(false);
 });
-  
 
+test('textContainsWord should return true if text contains the specified word', () => {
+    const text = 'Hello world, welcome to the universe.';
+    const word = 'welcome';
+    expect(textContainsWord(text, word)).toBe(true);
+});
 
-/*Функція яка приймає текстовий рядок із фразою та зворотній виклик. Функція перетворює
-фразу на масив слів передає її у зворотній виклик. Протестуйте з якими аргументами
-викликається зворотній виклик.*/
-test('executeCallbackOnArray should call callback for each array element', () => {
+test('textContainsWord should return false if text does not contain the specified word', () => {
+    const text = 'Hello world, welcome to the universe.';
+    const word = 'goodbye';
+    expect(textContainsWord(text, word)).toBe(false);
+});
+
+test('objectReturnedByFunctionHasField should return true if object returned by function has the specified field', () => {
+    const func = () => ({ id: 1, name: 'Mariia' });
+    const field = 'name';
+    expect(objectReturnedByFunctionHasField(func, field)).toBe(true);
+});
+
+test('objectReturnedByFunctionHasField should return false if object returned by function does not have the specified field', () => {
+    const func = () => ({ id: 1, age: 21 });
+    const field = 'name';
+    expect(objectReturnedByFunctionHasField(func, field)).toBe(false);
+});
+
+test('applyCallbackToArray should call the callback function for each element in the array', () => {
+    const array = [1, 2, 3, 4, 5];
     const callback = jest.fn();
-    executeCallbackOnArray([1, 2, 3], callback);
-    expect(callback).toHaveBeenCalledTimes(3);
+    applyCallbackToArray(array, callback);
+    expect(callback).toHaveBeenCalledTimes(array.length);
 });
-  
-test('executeCallbackOnPhrase should call callback with array of words', () => {
+
+test('phraseToArrayAndApplyCallback should call the callback function with an array of words from the phrase', () => {
+    const phrase = 'Hello world, welcome to the universe.';
     const callback = jest.fn();
-    executeCallbackOnPhrase('hello Mary', callback);
-    expect(callback).toHaveBeenCalledWith(['hello', 'Mary']);
+    phraseToArrayAndApplyCallback(phrase, callback);
+    expect(callback).toHaveBeenCalledWith(['Hello', 'world,', 'welcome', 'to', 'the', 'universe.']);
 });
-  
 
-
-/*Створіть об’єкт який містить поле імені та поле прізвища, додайте в об’єкт метод introduce
-який виводить у консоль фразу «Hello, I’m firstname lastname». З використання jest.spyOn
-преревірте кількість викликів методу.*/
-test('createPerson should create a person with introduce method', () => {
-    const person = createPerson('Kristina', 'Dzhola');
-    const spy = jest.spyOn(person, 'introduce');
+test('introduce method should be called once', () => {
+    const spy = jest.spyOn(console, 'log');
     person.introduce();
-    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledTimes(1);
+    spy.mockRestore();
 });
-  
