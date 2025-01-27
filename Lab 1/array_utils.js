@@ -1,17 +1,16 @@
-function sumArray(arr) 
-{
-    return arr.reduce((acc, curr) => acc + curr, 0);
+// Функція, що повертає суму елементів масиву
+function calculateSum(array) {
+    return array.reduce((acc, curr) => acc + curr, 0);
 }
-  
-function filterPositive(arr) 
-{
-    return arr.filter(num => num > 0);
+
+// Функція, що повертає масив позитивних чисел
+function filterPositiveNumbers(array) {
+    return array.filter(num => num > 0);
 }
-  
-function filterNegative(arr) 
-{
-    return arr.filter(num => num < 0);
+
+// Функція, що повертає масив негативних чисел
+function filterNegativeNumbers(array) {
+    return array.filter(num => num < 0);
 }
-  
-module.exports = { sumArray, filterPositive, filterNegative };
-  
+
+module.exports = { calculateSum, filterPositiveNumbers, filterNegativeNumbers };
